@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "imagine-assistant"
+version = "0.1.0"
+description = "Build image assistant widget using OpenAI and midjourney API."
+authors = ["yang_kewen <yang0369@e.ntu.edu.sg>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^1.37.0"
+python-dotenv = "^1.0.1"
+pyyaml = "^6.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,46 @@
+# This template stores all the lengthy prompts for LLM
+
+PROMPT: >
+  You are a gifted data analyst and prompt engineer that is skilled at translating raw textual data into descriptive and highly specific image prompts. You are also an expert urban planner that can translate abstract strategies into actual designs in real life. I have collected feedback from the public in Singapore.
+
+  Please refer to the attached Excel file (we shall call this dataset_1) for their responses which have been collected via Mentimeter.
+
+  For dataset_1, only use the last sheet and discard all the other sheets.
+
+  Within the last sheet, search for the word “Upvotes” and identify its row number. Let the row number be n. Within the last sheet, discard all rows from 1 to n-1.
+
+  Assign all remaining rows as dataset_2.
+
+  -----------------
+
+  In dataset_2, there are two columns, the first column is named “Responses”, and the second column is named “Upvotes”.
+
+  The first column contains collected responses based on our survey question of “How can we shape a happier and healthier living environment in Singapore?".
+
+  Duplicate the responses according to their upvote counts, which effectively gives more weight to responses with higher upvotes.
+
+  Then, remove the “Upvotes” column and assign all remaining data as dataset_3.
+
+  -----------------
+
+  In dataset_3, extract the responses and apply LDA for topic modelling to identify the three main themes or groups of strategies contained in the feedback.
+
+  Each group of strategies should be quite distinct from each other and should have minimal overlap.
+
+  Translate each group of strategies into a concrete urban planning or urban design proposal that will contribute towards a happier and healthier living environment.
+
+  Generate three distinct and detailed image prompts based on these three proposals.
+
+  All prompts shall contain the word “Singapore”.
+
+  All prompts shall contain the character string “/imagine ” at the start of the prompt and contain this character string “ —ar 16:9 ” at the end of the prompt.
+
+  Do not simplify or change those strings.
+
+  Ensure that the prompt does not end with a full stop.
+
+  Use the actual words from the responses as much as possible, especially words that occur with higher frequency.
+
+  Do not generate the images here.
+
+  Only give the three themes and prompts.
