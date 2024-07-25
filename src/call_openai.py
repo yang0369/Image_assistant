@@ -4,7 +4,6 @@ This script is to experiment with OpenAI APIs
 import os
 from dotenv import load_dotenv
 from util.custom_logger import CustomLogger
-import openai
 from openai import OpenAI
 from openai.types.beta.threads.run import Run as RunType
 from openai.types.beta.thread import Thread as ThreadType

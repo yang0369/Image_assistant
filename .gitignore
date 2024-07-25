@@ -169,3 +169,4 @@ cython_debug/
 cache/
 data/
 artifacts/
+src/test.py
