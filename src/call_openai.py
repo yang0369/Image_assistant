@@ -4,10 +4,14 @@ This script is to experiment with OpenAI APIs
 import os
 from dotenv import load_dotenv
 from util.custom_logger import CustomLogger
+import openai
 from openai import OpenAI
+from openai.types.beta.threads.run import Run as RunType
+from openai.types.beta.thread import Thread as ThreadType
 from pathlib import Path
 import yaml
 import time
+import re
 
 """
 1. Project Setup
@@ -43,7 +47,7 @@ logger.info("creating AI assistant")
 # create client
 client = OpenAI(
    default_headers={"OpenAI-Beta": "assistants=v2"},
-   max_retries=3,
+   max_retries=1,
    api_key=OPENAI_KEY,
 )
 
@@ -71,7 +75,7 @@ assistant = client.beta.assistants.create(
 """
 3. start a thread to prompt LLM
 """
-logger.info("Starting thread")
+logger.info("starting thread")
 # create thread
 thread = client.beta.threads.create()
 
@@ -90,12 +94,14 @@ run = client.beta.threads.runs.create_and_poll(
 
 
 """
-4. parse the response
+4. get response
 """
 logger.info("parsing the response")
 
-
-def wait_on_run(run, thread):
+def wait_on_run(
+        run: RunType, 
+        thread: ThreadType) -> RunType:
+    """ wait for all polling to be completed """
     while run.status == "queued" or run.status == "in_progress":
         run = client.beta.threads.runs.retrieve(
             thread_id=thread.id,
@@ -113,26 +119,42 @@ run_steps = client.beta.threads.runs.steps.list(
   run_id=run.id
 )
 
-out = []
-out.append("--------------------- code intepreter --------------------")
+code_snippet = []
 for itm in run_steps.data[::-1]:
     sd = itm.step_details
     if sd.type == "tool_calls":
         tool_call_detail = sd.tool_calls        
-        out.append(tool_call_detail[0].code_interpreter.input) # Algoritm
+        code_snippet.append(tool_call_detail[0].code_interpreter.input) # Algoritm
         if len(tool_call_detail[0].code_interpreter.outputs) > 0:
-            out.append(tool_call_detail[0].code_interpreter.outputs[0].logs) # Output
+            code_snippet.append(tool_call_detail[0].code_interpreter.outputs[0].logs) # Output
+
+code_snippet = "\n".join(code_snippet)
+logger.info("code interpreter >>>")
+logger.info(code_snippet)
 
 # parse the messages
-out.append("---------------------- proposal ---------------------------")
+text = []
 messages = client.beta.threads.messages.list(thread_id=thread.id)
 
 for m in messages:
-    out.append(m.content[0].text.value)
+    text.append(m.content[0].text.value)
 
-out = "\n".join(out)
+text = "\n".join(text)
+logger.info("proposal >>>")
+logger.info(text)
 
-print(out)
+"""
+5. parse response for image generation prompt
+"""
+
+# Regex pattern to extract text between "/imagine" and "—ar 16:9"
+pattern = r"/imagine\s*(.*?)\s*—ar 16:9"
+
+# Finding all matches
+matches = re.findall(pattern, text)
+logger.info("image prompts >>>")
+logger.info(matches)
+
 
 """
 references:
