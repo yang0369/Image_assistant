@@ -6,8 +6,6 @@ from util.custom_logger import CustomLogger
 
 st.title('Image Generation')
 
-st.divider()
-
 # set logger
 logger = CustomLogger()
 
@@ -45,4 +43,4 @@ if 'prompts' in st.session_state:
 else:
     st.warning("Please upload your file first", icon="⚠️")
     time.sleep(3)
-    switch_page("main")
+    switch_page("home")

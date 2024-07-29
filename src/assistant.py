@@ -1,3 +1,6 @@
+"""
+This script serves as the one-stop backend code for this App
+"""
 import dataclasses
 import http.client
 import io

@@ -1,3 +1,6 @@
+"""
+This script is an experiment code for imagineAPI
+"""
 import http.client
 import json
 import os

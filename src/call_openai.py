@@ -1,5 +1,5 @@
 """
-This script is to experiment with OpenAI APIs
+This script is an experiment code for OpenAI APIs
 """
 import os
 import re
@@ -97,6 +97,7 @@ run = client.beta.threads.runs.create_and_poll(
 4. get response
 """
 logger.info("parsing the response")
+
 
 def wait_on_run(
         run: RunType, 
