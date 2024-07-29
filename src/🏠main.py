@@ -1,12 +1,12 @@
-from pathlib import Path
-import pandas as pd
 import io
+import pandas as pd
+import streamlit as st
+from pathlib import Path
+from pathlib import Path
 from streamlit_extras.switch_page_button import switch_page
 
-import streamlit as st
-from util.custom_logger import CustomLogger
 from src.assistant import Assistant
-from pathlib import Path
+from util.custom_logger import CustomLogger
 
 # set logger
 logger = CustomLogger()
@@ -43,6 +43,7 @@ st.markdown(
 
 def run():
     st.title("Image Assistant :robot_face:")
+    
     txt = "Created using the cutting-edge technology of OpenAI and ImagineAPI, our app transforms your creative ideas into stunning images. Simply describe your vision, and watch as our app brings it to life with unparalleled detail and artistry. Perfect for artists, designers, and anyone looking to visualize their creativity, our app makes the impossible possible—one image at a time. Dive into a world where imagination knows no bounds!"
     st.markdown(
         f"""

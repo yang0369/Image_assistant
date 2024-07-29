@@ -3,8 +3,8 @@ import json
 import os
 import pprint
 import time
-
 from dotenv import load_dotenv
+
 from util.custom_logger import CustomLogger
 
 # set logger

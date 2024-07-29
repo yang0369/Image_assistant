@@ -1,10 +1,12 @@
 import pandas as pd
 import streamlit as st
-from util.custom_logger import CustomLogger
 import time
+from streamlit_extras.switch_page_button import switch_page
+from util.custom_logger import CustomLogger
 
 st.title('Image Generation')
 
+st.divider()
 
 # set logger
 logger = CustomLogger()
@@ -41,4 +43,6 @@ if 'prompts' in st.session_state:
                     st.write(f":mag_right: [fullscreen]({st.session_state['images'].get(idx)[3]})")
 
 else:
-    st.write("please go to main page and upload your file first")
+    st.warning("Please upload your file first", icon="⚠️")
+    time.sleep(3)
+    switch_page("main")

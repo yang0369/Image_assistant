@@ -6,16 +6,16 @@ import os
 import pprint
 import re
 import time
-from dataclasses import dataclass
-from http.client import HTTPSConnection as ImgGenType
-from pathlib import Path
-from typing import List, Literal, Tuple, Dict, Union
-
 import yaml
+from dataclasses import dataclass
 from dotenv import load_dotenv
+from http.client import HTTPSConnection as ImgGenType
 from openai import OpenAI
 from openai.types.beta.thread import Thread as ThreadType
 from openai.types.beta.threads.run import Run as RunType
+from pathlib import Path
+from typing import List, Literal, Tuple, Dict, Union
+
 from util.custom_logger import CustomLogger
 
 # load OpenAI credentials

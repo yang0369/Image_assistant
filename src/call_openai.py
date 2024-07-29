@@ -4,13 +4,13 @@ This script is to experiment with OpenAI APIs
 import os
 import re
 import time
-from pathlib import Path
-
 import yaml
 from dotenv import load_dotenv
 from openai import OpenAI
 from openai.types.beta.thread import Thread as ThreadType
 from openai.types.beta.threads.run import Run as RunType
+from pathlib import Path
+
 from util.custom_logger import CustomLogger
 
 """
