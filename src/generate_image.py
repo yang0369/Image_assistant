@@ -1,10 +1,11 @@
 import http.client
 import json
-import pprint
-from dotenv import load_dotenv
 import os
-from util.custom_logger import CustomLogger
+import pprint
 import time
+
+from dotenv import load_dotenv
+from util.custom_logger import CustomLogger
 
 # set logger
 logger = CustomLogger()

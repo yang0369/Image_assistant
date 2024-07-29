@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "imagine-assistant"
+name = "image-assistant"
 version = "0.1.0"
 description = "Build image assistant widget using OpenAI and midjourney API."
 authors = ["yang_kewen <yang0369@e.ntu.edu.sg>"]
@@ -14,6 +14,7 @@ pyyaml = "^6.0.1"
 requests = "^2.32.3"
 streamlit = "^1.36.0"
 openpyxl = "^3.1.5"
+streamlit-extras = "^0.4.3"
 
 
 [build-system]

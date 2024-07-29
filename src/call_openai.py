@@ -2,15 +2,16 @@
 This script is to experiment with OpenAI APIs
 """
 import os
-from dotenv import load_dotenv
-from util.custom_logger import CustomLogger
-from openai import OpenAI
-from openai.types.beta.threads.run import Run as RunType
-from openai.types.beta.thread import Thread as ThreadType
-from pathlib import Path
-import yaml
-import time
 import re
+import time
+from pathlib import Path
+
+import yaml
+from dotenv import load_dotenv
+from openai import OpenAI
+from openai.types.beta.thread import Thread as ThreadType
+from openai.types.beta.threads.run import Run as RunType
+from util.custom_logger import CustomLogger
 
 """
 1. Project Setup
