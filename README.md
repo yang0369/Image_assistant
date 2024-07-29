@@ -13,6 +13,13 @@ poetry init
 
 poetry install
 ```
+
+- create a .env file under project root with the content below
+```
+OPENAI_KEY="YOUR_KEY_HERE"
+IMAGINE_TOKEN="YOUR_KEY_HERE"
+```
+
  - run App on local server
 ```
 cd Image_assistant

@@ -1,4 +1,3 @@
-import pandas as pd
 import streamlit as st
 import time
 from streamlit_extras.switch_page_button import switch_page
@@ -13,8 +12,8 @@ logger = CustomLogger()
 if 'prompts' in st.session_state:
     with st.container(height=200):
         prompt = st.radio(
-        ":stuck_out_tongue: Choose a prompt :point_down:",
-        [f":thought_balloon: :rainbow[{p}]" for p in st.session_state.prompts])
+            ":stuck_out_tongue: Choose a prompt :point_down:",
+            [f":thought_balloon: :rainbow[{p}]" for p in st.session_state.prompts])
 
     st.divider()
 

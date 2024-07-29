@@ -1,4 +1,3 @@
-import io
 import pandas as pd
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
@@ -39,6 +38,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 def display_data() -> None:
     st.header("Data Sample")
     with st.container(height=300, border=True):
@@ -47,8 +47,12 @@ def display_data() -> None:
 
 def run():
     st.title("Image Assistant :robot_face:")
-    
-    txt = "Created using the cutting-edge technology of OpenAI and ImagineAPI, our app transforms your creative ideas into stunning images. Simply describe your vision, and watch as our app brings it to life with unparalleled detail and artistry. Perfect for artists, designers, and anyone looking to visualize their creativity, our app makes the impossible possible—one image at a time. Dive into a world where imagination knows no bounds!"
+
+    txt = '''Created using the cutting-edge technology of OpenAI and ImagineAPI, our app transforms your creative ideas
+    into stunning images. Simply describe your vision, and watch as our app brings it to life with unparalleled detail
+    and artistry. Perfect for artists, designers, and anyone looking to visualize their creativity, our app makes the
+    impossible possible—one image at a time. Dive into a world where imagination knows no bounds!'''
+
     st.markdown(
         f"""
         <p class="description"><i>{txt}</i></p>
@@ -69,10 +73,10 @@ def run():
 
             st.session_state['demo'] = dataframe.head(5)
             display_data()
-            
+
             # generate prompts
             st.session_state['code'], st.session_state['proposal'], st.session_state['prompts'] = \
-            backend.generate_prompts(uploaded_file)
+                backend.generate_prompts(uploaded_file)
 
             # generate images
             if "prompts" not in st.session_state:
@@ -80,16 +84,17 @@ def run():
             else:
                 images = dict()
                 for idx, p in enumerate(st.session_state['prompts']):
-                    images[idx] = backend.generate_image(p)   
+                    images[idx] = backend.generate_image(p)
 
-                st.session_state['images'] = images 
+                st.session_state['images'] = images
 
                 # force switch to next page
                 switch_page("prompt_generation")
-    
+
     else:  # if no file being uploaded
         if 'demo' in st.session_state:
             display_data()
+
 
 if __name__ == "__main__":
     run()
