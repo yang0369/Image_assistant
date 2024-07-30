@@ -1,6 +1,8 @@
-import streamlit as st
 import time
+
+import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+
 from util.custom_logger import CustomLogger
 
 st.title('Prompt Generation')
@@ -10,6 +12,8 @@ logger = CustomLogger()
 
 
 def display_generations() -> None:
+    """Display the current state of the current session .
+    """
     with st.container(height=500):
         if st.session_state['code']:
             st.markdown('<p class="sub_header"> <b>Code Interpreter:</b> </p>', unsafe_allow_html=True)
@@ -33,6 +37,3 @@ else:
     st.warning("Please upload your file first", icon="⚠️")
     time.sleep(3)
     switch_page("home")
-
-
-

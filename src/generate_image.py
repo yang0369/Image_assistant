@@ -36,6 +36,17 @@ headers = {
 
 # send data to imagine API
 def send_request(method, path, body=None, headers={}):
+    """Send a request to the Imagemap server .
+
+    Args:
+        method ([type]): [description]
+        path ([type]): [description]
+        body ([type], optional): [description]. Defaults to None.
+        headers (dict, optional): [description]. Defaults to {}.
+
+    Returns:
+        [type]: [description]
+    """
     conn = http.client.HTTPSConnection("cl.imagineapi.dev")
     conn.request(method, path, body=json.dumps(body) if body else None, headers=headers)
     response = conn.getresponse()

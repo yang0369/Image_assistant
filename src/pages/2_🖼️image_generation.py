@@ -1,6 +1,8 @@
-import streamlit as st
 import time
+
+import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
+
 from util.custom_logger import CustomLogger
 
 st.title('Image Generation')
@@ -30,7 +32,7 @@ if 'prompts' in st.session_state:
                 with col2:
                     st.image(st.session_state['images'].get(idx)[1])
                     st.write(f":mag_right: [fullscreen]({st.session_state['images'].get(idx)[1]})")
-                    
+
                 with col3:
                     st.image(st.session_state['images'].get(idx)[2])
                     st.write(f":mag_right: [fullscreen]({st.session_state['images'].get(idx)[2]})")

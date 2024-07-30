@@ -1,7 +1,6 @@
 """
 This script serves as the one-stop backend code for this App
 """
-import dataclasses
 import http.client
 import io
 import json
@@ -12,7 +11,6 @@ import time
 import yaml
 from dataclasses import dataclass
 from dotenv import load_dotenv
-from http.client import HTTPSConnection as ImgGenType
 from openai import OpenAI
 from openai.types.beta.thread import Thread as ThreadType
 from openai.types.beta.threads.run import Run as RunType
@@ -67,12 +65,12 @@ class Assistant:
                 default_headers={"OpenAI-Beta": "assistants=v2"},
                 max_retries=1,
                 api_key=self.TextGen_key)
-            
+
         logger.info("Assistant is ready to help")
 
     def wait_on_run(
             self,
-            run: RunType, 
+            run: RunType,
             thread: ThreadType) -> RunType:
         """ wait for all polling to be completed """
         while run.status == "queued" or run.status == "in_progress":
@@ -82,16 +80,16 @@ class Assistant:
             )
             time.sleep(0.5)
         return run
-    
+
     def parse_code_snippet(
-            self, 
-            run: RunType, 
+            self,
+            run: RunType,
             thread: ThreadType) -> str:
         """get the code response
 
         Args:
             run (RunType): openAI run session
-            thread (ThreadType): openAI thread 
+            thread (ThreadType): openAI thread
 
         Returns:
             str: code snippet
@@ -106,22 +104,22 @@ class Assistant:
         for itm in run_steps.data[::-1]:
             sd = itm.step_details
             if sd.type == "tool_calls":
-                tool_call_detail = sd.tool_calls        
-                code_snippet.append(tool_call_detail[0].code_interpreter.input) # Algoritm
+                tool_call_detail = sd.tool_calls
+                code_snippet.append(tool_call_detail[0].code_interpreter.input)  # Algoritm
                 if len(tool_call_detail[0].code_interpreter.outputs) > 0:
-                    code_snippet.append(tool_call_detail[0].code_interpreter.outputs[0].logs) # Output
+                    code_snippet.append(tool_call_detail[0].code_interpreter.outputs[0].logs)  # Output
 
         code_snippet = "\n".join(code_snippet)
         logger.info("code interpreter >>>")
         logger.info(code_snippet)
-        
+
         return code_snippet
 
     def parse_text(self, thread: ThreadType) -> str:
         """get text response in thread level
 
         Args:
-            thread (ThreadType): openAI thread 
+            thread (ThreadType): openAI thread
 
         Returns:
             str: proposal
@@ -158,13 +156,13 @@ class Assistant:
         logger.info(matches)
 
         return matches
-    
+
     def generate_prompts(self, file: io.BufferedReader) -> Tuple[str, str, List[str]]:
         # prepare input file
         file = self.TextGen.files.create(
             file=file,
             purpose='assistants')
-        
+
         logger.info("loaded file")
         # create chat assistant
         self.chat_assistant = self.TextGen.beta.assistants.create(
@@ -176,11 +174,11 @@ class Assistant:
             tools=[{"type": "code_interpreter"}],
             tool_resources={
                 "code_interpreter": {
-                "file_ids": [file.id]
+                    "file_ids": [file.id]
                 }
             }
             )
-        
+
         logger.info("starting thread")
 
         # create thread
@@ -193,7 +191,7 @@ class Assistant:
             content="start",
         )
 
-        # create a run 
+        # create a run
         run = self.TextGen.beta.threads.runs.create_and_poll(
             thread_id=thread.id,
             assistant_id=self.chat_assistant.id,
@@ -228,45 +226,45 @@ class Assistant:
         data = {
             "prompt": prompt
         }
-        
+
         logger.info(data)
 
         headers = {
-            'Authorization': f"Bearer {self.ImgGen_key}", 
+            'Authorization': f"Bearer {self.ImgGen_key}",
             'Content-Type': 'application/json'
         }
         # send prompt for image generation
-        prompt_response_data = self.send_request('POST', '/items/images/', data, headers) 
-        
+        prompt_response_data = self.send_request('POST', '/items/images/', data, headers)
+
         start_time = time.time()
 
         check_status = True
         while check_status:
             try:
                 status, res = self.check_image_status(prompt_response_data, headers)
-                
+
                 if status:
                     return res.get("upscaled_urls", [])
-                
+
                 if time.time() - start_time > self.timeout:
                     logger.error("timeout reached while waiting for image status.")
                     check_status = False
                     raise TimeoutError("timeout reached while waiting for image status.")
-                
+
                 logger.info("Image status not ready. Sleeping for %d seconds.", self.sleep_interval)
                 time.sleep(self.sleep_interval)
 
             except Exception as e:
                 logger.exception("An error occurred while checking image status: %s", str(e))
-            
+
     # send data to imagine API
     def send_request(
-            self, 
-            method: Literal["POST", "GET"], 
-            path: str, 
-            body: Union[Dict[str, str], None] = None, 
+            self,
+            method: Literal["POST", "GET"],
+            path: str,
+            body: Union[Dict[str, str], None] = None,
             headers: Dict[str, str] = {}) -> Dict:
-        
+
         conn = http.client.HTTPSConnection("cl.imagineapi.dev")
         conn.request(method, path, body=json.dumps(body) if body else None, headers=headers)
         response = conn.getresponse()
@@ -275,9 +273,9 @@ class Assistant:
         conn.close()
 
         return data
-    
+
     def check_image_status(
-            self, 
+            self,
             data: Dict[str, str],
             headers: Dict[str, str]) -> Tuple[bool, Union[Dict, None]]:
         """check if image link generation is completed or not
@@ -289,19 +287,19 @@ class Assistant:
         Returns:
             Tuple[bool, Union[Dict, None]]: status and result
         """
-        
+
         response_data = self.send_request(
-            'GET', 
-            f"/items/images/{data['data']['id']}", 
+            'GET',
+            f"/items/images/{data['data']['id']}",
             headers=headers)
-        
+
         if response_data['data']['status'] in ['completed', 'failed']:
             logger.info('completed image details',)
             return (True, response_data['data'])
         else:
             print(f"image is not finished generation. Status: {response_data['data']['status']}")
             return (False, None)
-        
+
     def generate(self, file: io.BufferedReader) -> Dict[int, List[str]]:
         """one stop generation function
 
@@ -313,13 +311,13 @@ class Assistant:
         """
 
         _, prompts = self.generate_prompts(file)
-        
+
         res = dict()
         for idx, p in enumerate(prompts):
             res[idx] = self.generate_image(p)
 
         return res
-    
+
 
 if __name__ == '__main__':
 
@@ -332,5 +330,5 @@ if __name__ == '__main__':
     prompts = ['A vibrant, affordable housing complex in Singapore with pet-friendly areas, giant cats sculptures, colourful family parks, and lush green spaces', 'A lush, well-shaded recreational area in Singapore with running tracks, sheltered walkways, rest areas, and vibrant play spaces promoting work-life balance', 'An open park in Singapore with shaded areas for exercise, cycling paths, and facilities for various outdoor activities, promoting a healthy lifestyle']
 
     res = backend.generate_image(prompts[0])
-    
+
     logger.info("completed")
