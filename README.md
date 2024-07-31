@@ -1,6 +1,6 @@
 # Imagine_assistant
 
-<img src="demo.gif" width="200" height="100" />
+<img src="demo.gif" width="800" height="500" />
 
 ## About this App
 
