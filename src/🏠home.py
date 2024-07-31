@@ -40,7 +40,7 @@ st.markdown(
 
 
 def display_data() -> None:
-    st.header("Data Sample")
+    st.header(f"{st.session_state['name']}")
     with st.container(height=300, border=True):
         st.write(st.session_state['demo'])
 
@@ -62,16 +62,26 @@ def run():
 
     st.divider()
 
-    uploaded_file = st.file_uploader("upload your :page_with_curl: here :point_down:")
-    st.markdown('<p class="caveat"> <i>*currently supports excel only</i> </p>', unsafe_allow_html=True)
+    uploaded_file = st.file_uploader(
+        "upload your :page_with_curl: here :point_down:", 
+        accept_multiple_files=False)
+    
+    st.markdown(
+        '<p class="caveat"> <i>*currently supports excel only</i> </p>',
+        unsafe_allow_html=True)
 
     # if there is new file uploaded
     if uploaded_file is not None:
-        with st.spinner(':rocket: generating images...'):
+        with st.spinner(':rocket: generating prompts and images...'):
             # Can be used wherever a "file-like" object is accepted:
-            dataframe = pd.read_excel(uploaded_file, sheet_name='Voters')
-
-            st.session_state['demo'] = dataframe.head(5)
+            df = pd.read_excel(uploaded_file, sheet_name='Session 2')
+            new_column_names = df.iloc[6].values
+            df.columns = new_column_names
+            df = df.drop(index=6)
+            df = df.loc[7:, :]
+            df.reset_index(inplace=True, drop=True)
+            st.session_state['demo'] = df
+            st.session_state['name'] = uploaded_file.name
             display_data()
 
             # generate prompts
